@@ -4,7 +4,12 @@
 
 <html lang="en">
     <head>
-        
+        <style>
+             a{
+    text-decoration: none;
+    cursor: default; color: white;
+  }
+        </style>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
@@ -22,45 +27,45 @@
         <h1 class="choose">Select your profile</h1>
         <p id="library">Your Library Is Shared</p>
 
-       <div id="row">
-  <div id="one"  class="card">
+      <div id="row">
+  <a href="home.html"> <div id="one"  class="card">
     <img class="profile_pic" src="profile_pic.png"/>
     <h4 class="name-label">Jyotsna Arora</h4>
     
     
     
     <button class="three_dots">
-      <a href="home.html"><img src="three_dots.png" alt="menu"></a>
+     <img src="three_dots.png" alt="menu">
     </button>
-  </div>
+  </div></a>
 
-  <div id="two"  class="card">
+ <a href="home.html">  <div id="two"  class="card">
     <img class="profile_pic" src="profile_pic.png"/>
     <h4 class="name-label">Vansh Rishi</h4>
     <button class="three_dots">
       <img src="three_dots.png" alt="menu">
     </button>
-  </div>
+  </div></a>
 
-  <div id="three"  class="card">
+  <a href="home.html"> <div id="three"  class="card">
     <img class="profile_pic" src="profile_pic.png"/>
     <h4 class="name-label">Jaya Arora</h4>
     <button class="three_dots">
       <img src="three_dots.png" alt="menu">
     </button>
   </div>
+  </a>
   <button id="godi" style="border:none;background-color:transparent;" onclick="addcard()"><img style="width:80px;height:80px;position:relative;top:3px;" src="plus.png"/>
 </button>
   
-</div>
+</div> 
 
-<!-- Single menu element -->
 <div class="menu" id="contextMenu">
   <button class="edit" onclick="edit()">Edit</button>
   <button class="remove" onclick="remove()">Remove</button>
 </div>
 <div class="logo-down">
-    <p>LOGO</p>
+    <img style="width:85px;height:85px;position:relative;bottom:20px;" src="voxel.png">
 </div>
 <script src="script.js"></script>
     </body>
