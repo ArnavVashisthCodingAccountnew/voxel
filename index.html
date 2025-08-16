@@ -1,0 +1,68 @@
+---
+
+---
+
+<html lang="en">
+    <head>
+        
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <link rel="stylesheet" href="style.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet">
+        <title>Voxel</title>
+    </head>
+    <body>
+        <div id="toprow">
+             <img style="position:relative;top:15px;" src="notification_icon.png"/>
+             <img style="position:relative;right:13px;top:15px;" src="settings.png"/>
+        </div>
+        <h1 class="choose">Select your profile</h1>
+        <p id="library">Your Library Is Shared</p>
+
+       <div id="row">
+  <div id="one"  class="card">
+    <img class="profile_pic" src="profile_pic.png"/>
+    <h4 class="name-label">Jyotsna Arora</h4>
+    
+    
+    
+    <button class="three_dots">
+      <a href="home.html"><img src="three_dots.png" alt="menu"></a>
+    </button>
+  </div>
+
+  <div id="two"  class="card">
+    <img class="profile_pic" src="profile_pic.png"/>
+    <h4 class="name-label">Vansh Rishi</h4>
+    <button class="three_dots">
+      <img src="three_dots.png" alt="menu">
+    </button>
+  </div>
+
+  <div id="three"  class="card">
+    <img class="profile_pic" src="profile_pic.png"/>
+    <h4 class="name-label">Jaya Arora</h4>
+    <button class="three_dots">
+      <img src="three_dots.png" alt="menu">
+    </button>
+  </div>
+  <button id="godi" style="border:none;background-color:transparent;" onclick="addcard()"><img style="width:80px;height:80px;position:relative;top:3px;" src="plus.png"/>
+</button>
+  
+</div>
+
+<!-- Single menu element -->
+<div class="menu" id="contextMenu">
+  <button class="edit" onclick="edit()">Edit</button>
+  <button class="remove" onclick="remove()">Remove</button>
+</div>
+<div class="logo-down">
+    <p>LOGO</p>
+</div>
+<script src="script.js"></script>
+    </body>
+     
+</html>

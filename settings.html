@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings UI</title>
+    <style>
+        :root {
+            --bg-primary: #121212;
+            --bg-secondary: #1E1E1E;
+            --bg-tertiary: #252525;
+            --border-color: #333333;
+            --text-primary: #EAEAEA;
+            --text-secondary: #A0A0A0;
+            --text-active-bg: #F0F0F0;
+            --text-active-fg: #121212;
+            --accent-green: #A0E8A9;
+            --accent-green-darker: #4E855E;
+            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* --- Main App Container --- */
+        .app-container {
+            width: 100%;
+            max-width: 1440px;
+            height: 100vh;
+            max-height: 860px;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background-color: #fff;
+            border-radius: 50%;
+        }
+
+        .search-bar {
+            position: relative;
+            margin: 0 24px;
+            flex-grow: 1;
+            max-width: 400px;
+        }
+
+        .search-bar svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            fill: var(--text-secondary);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px 12px 8px 36px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-bar input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .time {
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 24px;
+        }
+        
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-avatar {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            background-color: var(--text-secondary);
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+        
+        .online-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            background-color: #34C759;
+            border: 2px solid var(--bg-secondary);
+            border-radius: 50%;
+        }
+
+        .profile-name {
+            font-weight: 500;
+        }
+        
+        .profile-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .settings-panel {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 32px;
+            overflow-y: auto;
+        }
+
+        .settings-header {
+            margin-bottom: 24px;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .back-button svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+
+        .settings-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .settings-body {
+            display: flex;
+            flex-grow: 1;
+        }
+        
+        /* --- Settings Left Navigation --- */
+        .settings-nav {
+            width: 220px;
+            flex-shrink: 0;
+            margin-right: 48px;
+        }
+
+        .settings-nav .category-title {
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-left: 12px;
+        }
+
+        .settings-nav ul {
+            list-style: none;
+        }
+
+        .settings-nav li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        
+        .settings-nav li.active a,
+        .settings-nav li a:hover {
+            background-color: var(--text-active-bg);
+            color: var(--text-active-fg);
+        }
+
+        .help-icon {
+            border: 1.5px solid currentColor;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        /* --- Settings Detail View (Right Panel) --- */
+        .settings-details {
+            flex-grow: 1;
+            border-left: 1px solid var(--border-color);
+            padding-left: 48px;
+        }
+
+        .details-nav {
+            display: flex;
+            gap: 24px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+
+        .details-nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            padding: 8px 4px 12px 4px;
+            font-weight: 500;
+            position: relative;
+        }
+        .details-nav a.active {
+            color: var(--text-primary);
+        }
+
+        .details-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--text-primary);
+        }
+
+        .setting-group {
+            margin-bottom: 32px;
+        }
+        
+        .setting-group h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+        }
+
+        .setting-item-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+        
+        .setting-item-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--text-secondary);
+        }
+
+        .setting-item-text .title {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .setting-item-text .description {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .setting-item-control {
+            margin-left: auto;
+            min-width: 200px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* --- Custom Form Controls --- */
+
+        /* Dropdown Select */
+        .custom-select {
+            position: relative;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .custom-select select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 100%;
+            padding: 8px 32px 8px 12px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .custom-select .arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .custom-select .arrow svg {
+            width: 12px;
+            height: 12px;
+            fill: var(--text-secondary);
+        }
+
+        /* Static display for resolution */
+        .static-display {
+            padding: 8px 12px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        /* Custom Slider */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: linear-gradient(to right, var(--accent-green) 50%, var(--bg-tertiary) 50%);
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: 3px solid var(--bg-secondary);
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            cursor: pointer;
+            margin-top: -7px;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+
+        input[type="range"]::-moz-range-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            border: 1px solid var(--border-color);
+        }
+        
+        input[type="range"]::-moz-range-progress {
+            background-color: var(--accent-green);
+            height: 4px;
+            border-radius: 3px;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            border: 3px solid var(--bg-secondary);
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            cursor: pointer;
+            box-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+ .vertical-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 65px;
+    height: 100vh;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    gap: 20px;
+    z-index: 100;
+  }
+
+  .vertical-menu .menu-item {
+    width: 35px;
+    height: 28px;
+   
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 22px;
+  }
+  .menu-item svg{
+    width:23px;
+    height:23px;
+  }
+  .menu-item img{
+    width:23px;
+    height:23px;
+  }
+  .vertical-menu .menu-item:hover {
+    background-color: #393939;
+  }
+
+  .vertical-menu .menu-item.active {
+     border-left: 3px solid #82EC9D; 
+  }
+
+  /* Main content container */
+  .main-content {
+    margin-left: 65px;
+    width: calc(100vw - 65px);
+  }
+  
+  /* Top bar */
+  #toprow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 60px;
+  }
+  
+  .left-section {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  
+  .searchcontainer {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+  
+  .searchbar {
+    height: 34px;
+    border-radius: 5px;
+    border: 1px solid #393939;
+    background-color: #191919;
+    color: white;
+    padding-left: 35px;
+    width: 186px;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  
+  .searchbar::placeholder {
+    color: transparent;
+  }
+  
+  .searchbar::-webkit-input-placeholder {
+    color: transparent;
+  }
+  
+  .searchbar::-moz-placeholder {
+    color: transparent;
+    opacity: 1;
+  }
+  
+  .searchbar:-ms-input-placeholder {
+    color: transparent;
+  }
+  
+  .searchicon {
+    position: absolute;
+    left: 11px;
+    cursor: pointer;
+  }
+  
+  .right-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+  
+  .user-name {
+    color: white;
+    font-size: 17.8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .user-status {
+    color: white;
+    font-size: 15.5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .backrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 15px 20px 10px;
+    cursor: pointer;
+  }
+  
+  .backrow p {
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+        .custom-button {
+            padding: 8px 16px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .custom-button:hover {
+            background-color: #383838;
+        }
+        hr{
+            border:0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+      <div id="toprow">
+    <div class="left-section">
+      <img src="profile_pic.png" class="avatar" />
+      <div class="searchcontainer">
+        <input class="searchbar" type="text" placeholder=" " />
+        <svg class="searchicon" xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 41 40" fill="none">
+          <path d="M27.8149 34.7906L17.4354 24.4112C16.6117 25.0702 15.6643 25.5919 14.5934 25.9763C13.5225 26.3608 12.383 26.553 11.1748 26.553C8.18178 26.553 5.64897 25.5161 3.57637 23.4424C1.50377 21.3687 0.46692 18.8359 0.465821 15.844C0.464723 12.8521 1.50157 10.3193 3.57637 8.24556C5.65116 6.17186 8.18398 5.13501 11.1748 5.13501C14.1656 5.13501 16.699 6.17186 18.7749 8.24556C20.8508 10.3193 21.8871 12.8521 21.8838 15.844C21.8838 17.0522 21.6916 18.1917 21.3071 19.2626C20.9227 20.3335 20.401 21.2809 19.742 22.1046L30.1215 32.4841L27.8149 34.7906ZM11.1748 23.2579C13.2342 23.2579 14.985 22.5374 16.4271 21.0963C17.8693 19.6553 18.5898 17.9045 18.5887 15.844C18.5876 13.7835 17.8671 12.0332 16.4271 10.5933C14.9872 9.15335 13.2364 8.43228 11.1748 8.43008C9.11319 8.42788 7.36295 9.14896 5.92411 10.5933C4.48526 12.0376 3.76419 13.7879 3.76089 15.844C3.7576 17.9001 4.47867 19.6509 5.92411 21.0963C7.36954 22.5418 9.11978 23.2623 11.1748 23.2579Z" fill="#393939"/>
+        </svg>
+      </div>
+    </div>
+    <hr/><hr/><hr/><hr/><hr/><hr/>
+    <h4 id="time" style="font-size:22px;font-weight:400;"></h4>
+    <div class="right-section">
+      <img src="profile_pic.png" class="avatar" />
+      <div class="user-info">
+        <div class="user-name">
+          Jyotsna Arora
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" viewBox="0 0 32 33" fill="none">
+            <path d="M11 8L21 16.5L11 25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="user-status">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="13" viewBox="0 0 12 13" fill="none">
+            <circle cx="5.85" cy="6.36" r="5.83" fill="#82EC9D"/>
+          </svg>
+          Online
+        </div>
+      </div>
+    </div>
+  </div>
+
+        <main class="main-content">
+           <div class="vertical-menu">
+<a href="home.html">  <div class="menu-item"><img src='home.png'/></div></a>
+  <a href="shop.html"><div class="menu-item active"><svg xmlns="http://www.w3.org/2000/svg" width="33" height="33" viewBox="0 0 33 33" fill="none">
+  <path d="M16.5 1.375C14.859 1.375 13.2852 2.0269 12.1248 3.18728C10.9644 4.34766 10.3125 5.92147 10.3125 7.5625V9.625H4.125V31.625H28.875V9.625H22.6875V7.5625C22.6875 5.92147 22.0356 4.34766 20.8752 3.18728C19.7148 2.0269 18.141 1.375 16.5 1.375ZM19.9375 7.5625V9.625H13.0625V7.5625C13.0625 6.65082 13.4247 5.77648 14.0693 5.13182C14.714 4.48716 15.5883 4.125 16.5 4.125C17.4117 4.125 18.286 4.48716 18.9307 5.13182C19.5753 5.77648 19.9375 6.65082 19.9375 7.5625ZM10.3125 16.5V12.375H13.0625V16.5H10.3125ZM19.9375 16.5V12.375H22.6875V16.5H19.9375Z" fill="white"/>
+</svg></div></a>
+  <a href="voicechat.html"><div class="menu-item"><img src='message_icon.png'></div></a>
+  <div class="menu-item"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="37" viewBox="0 0 30 37" fill="none">
+  <path d="M14.7706 0.295166C11.7119 0.295166 8.77854 1.51022 6.61573 3.67303C4.45292 5.83584 3.23787 8.76924 3.23787 11.8279V17.6404C3.23811 17.896 3.17888 18.1481 3.06488 18.3769L0.23606 24.0329C0.0978754 24.3092 0.0326258 24.6162 0.0465086 24.9249C0.0603915 25.2335 0.152946 25.5335 0.315381 25.7963C0.477816 26.0591 0.704738 26.276 0.974596 26.4264C1.24445 26.5768 1.54829 26.6558 1.85724 26.6557H27.684C27.993 26.6558 28.2968 26.5768 28.5666 26.4264C28.8365 26.276 29.0634 26.0591 29.2259 25.7963C29.3883 25.5335 29.4808 25.2335 29.4947 24.9249C29.5086 24.6162 29.4434 24.3092 29.3052 24.0329L26.478 18.3769C26.3634 18.1483 26.3036 17.8961 26.3034 17.6404V11.8279C26.3034 8.76924 25.0883 5.83584 22.9255 3.67303C20.7627 1.51022 17.8293 0.295166 14.7706 0.295166ZM14.7706 31.5983C13.7481 31.5989 12.7505 31.2823 11.9155 30.6921C11.0804 30.102 10.4489 29.2673 10.1081 28.3033H19.4331C19.0923 29.2673 18.4608 30.102 17.6258 30.6921C16.7907 31.2823 15.7932 31.5989 14.7706 31.5983Z" fill="white"/>
+</svg></div>
+ <a href="settings.html"> <div class="menu-item"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
+  <path d="M15.2399 36.2459L14.5809 30.9738C14.2239 30.8365 13.8878 30.6717 13.5726 30.4795C13.2574 30.2873 12.9482 30.0814 12.645 29.8617L7.74361 31.9211L3.21289 24.0953L7.45529 20.8826C7.42784 20.6904 7.41411 20.5053 7.41411 20.3274V19.2153C7.41411 19.0363 7.42784 18.8506 7.45529 18.6584L3.21289 15.4457L7.74361 7.61995L12.645 9.67937C12.9471 9.4597 13.2629 9.25375 13.5924 9.06154C13.9219 8.86933 14.2514 8.70457 14.5809 8.56728L15.2399 3.29517H24.3013L24.9604 8.56728C25.3173 8.70457 25.654 8.86933 25.9703 9.06154C26.2866 9.25375 26.5953 9.4597 26.8962 9.67937L31.7976 7.61995L36.3284 15.4457L32.086 18.6584C32.1134 18.8506 32.1271 19.0363 32.1271 19.2153V20.3257C32.1271 20.5048 32.0997 20.6904 32.0448 20.8826L36.2872 24.0953L31.7564 31.9211L26.8962 29.8617C26.5942 30.0814 26.2784 30.2873 25.9489 30.4795C25.6194 30.6717 25.2899 30.8365 24.9604 30.9738L24.3013 36.2459H15.2399ZM19.853 25.5369C21.4456 25.5369 22.8048 24.974 23.9307 23.8482C25.0565 22.7224 25.6194 21.3631 25.6194 19.7705C25.6194 18.1779 25.0565 16.8187 23.9307 15.6929C22.8048 14.5671 21.4456 14.0041 19.853 14.0041C18.2329 14.0041 16.8666 14.5671 15.7539 15.6929C14.6413 16.8187 14.0855 18.1779 14.0866 19.7705C14.0877 21.3631 14.644 22.7224 15.7556 23.8482C16.8671 24.974 18.2329 25.5369 19.853 25.5369Z" fill="white"/>
+</svg></div></a>
+</div>
+
+            <div class="settings-panel">
+                <header class="settings-header">
+                    <a href="#" class="back-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                        BACK
+                    </a>
+                    <h1>Settings</h1>
+                </header>
+
+                <div class="settings-body">
+                    <nav class="settings-nav">
+                        <p class="category-title">System</p>
+                        <ul>
+                            <li class="active"><a href="#">Display & Sound</a></li>
+                            <li><a href="#">Input Devices</a></li>
+                            <li><a href="#">Network & Internet</a></li>
+                            <li><a href="#">Account & Privacy</a></li>
+                            <li><a href="#">Notifications</a></li>
+                            <li><a href="#">Voice Chat</a></li>
+                            <li><a href="#">App & Games</a></li>
+                            <li><a href="#">Help <span class="help-icon">?</span></a></li>
+                        </ul>
+                    </nav>
+
+                    <div class="settings-details">
+                        <nav class="details-nav">
+                            <a href="#" class="active">Display</a>
+                            <a href="#">Sound</a>
+                        </nav>
+
+                        <div class="setting-group">
+                            <h2>Scale & Layout</h2>
+                            <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8.5 12.5h-4v-4h4v4zm0-5h-4v-4h4v4zm5 5h-4v-4h4v4zm0-5h-4v-4h4v4z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">Scale</div>
+                                    <div class="description">Change the size of all on-screen elements</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <div class="custom-select">
+                                        <select>
+                                            <option>150% (Recommended)</option>
+                                            <option>125%</option>
+                                            <option>100%</option>
+                                        </select>
+                                        <span class="arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">Display Resolution</div>
+                                    <div class="description">Adjust the resolution to fit your connected display</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <div class="static-display">2560 x 1440 (Recommended)</div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h-2.02c-.33-2.88-2.20-5.43-4.58-6.75l.63-1.73zM2.52 11c.36-3.76 2.7-6.93 5.97-8.48l.63 1.73C6.72 5.57 4.85 8.12 4.52 11H2.52zM12 6.13c1.38 0 2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5S9.5 9.98 9.5 8.63 10.62 6.13 12 6.13zm6.87 6.37H5.13V18h13.74v-5.5zm-5.63.5h-2.5v2.5h2.5v-2.5zM17.48 20.87l.63-1.73c-2.38-1.32-4.25-3.87-4.58-6.75h-2.02c.33 2.88 2.2 5.43 4.58 6.75z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">Display Orientation</div>
+                                    <div class="description">Turn your display</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <div class="custom-select">
+                                        <select>
+                                            <option>Landscape</option>
+                                            <option>Portrait</option>
+                                        </select>
+                                        <span class="arrow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="setting-group">
+                            <h2>Brightness & Color</h2>
+                             <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zM12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">Brightness</div>
+                                    <div class="description">Adjust the brightness of the built-in display</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <div class="slider-container">
+                                        <input type="range" min="0" max="100" value="75" class="slider" id="brightnessSlider">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">Color Temperature</div>
+                                    <div class="description">Make your display cooler or warmer</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <div class="static-display">Warm (3500K)</div>
+                                </div>
+                            </div>
+                            <div class="setting-item">
+                                <div class="setting-item-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM6 15.5c0-.83.67-1.5 1.5-1.5h2c.83 0 1.5.67 1.5 1.5v1H6v-1zm12 1.5H13v-1c0-.83.67-1.5 1.5-1.5h2c.83 0 1.5.67 1.5 1.5v1zM6.5 10H11v1.5H6.5zm8.5 0h4.5v1.5H15zM11 7h2v5h-2z"/></svg>
+                                </div>
+                                <div class="setting-item-text">
+                                    <div class="title">HDR</div>
+                                    <div class="description">High Dynamic Range</div>
+                                </div>
+                                <div class="setting-item-control">
+                                    <button class="custom-button">Calibrate And Enable</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // --- JavaScript for Slider Fill ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const sliders = document.querySelectorAll('.slider');
+            
+            const updateSliderBackground = (slider) => {
+                const value = slider.value;
+                const min = slider.min || 0;
+                const max = slider.max || 100;
+                const percentage = (value - min) / (max - min) * 100;
+                
+                // For Webkit browsers (Chrome, Safari, Edge)
+                slider.style.background = `linear-gradient(to right, var(--accent-green) ${percentage}%, var(--bg-tertiary) ${percentage}%)`;
+
+                // For Firefox, this is handled by ::-moz-range-progress pseudo-element in CSS,
+                // but we can set a variable if needed for more complex cases.
+            };
+
+            sliders.forEach(slider => {
+                // Set initial background
+                updateSliderBackground(slider);
+                // Update background on input change
+                slider.addEventListener('input', (e) => updateSliderBackground(e.target));
+            });
+        });
+    </script>
+</body>
+</html>
